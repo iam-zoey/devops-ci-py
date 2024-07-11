@@ -1,0 +1,97 @@
+name: Build and Test with JFrog CLI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: intern-py
+      IMAGE_VERSION: 0.1
+      SONAR_PROJECT_KEY: python-app
+      ## DOCKERFILE ARGUMENTS
+      BASE_IMAGE_VERSION: 3.7
+      FILE_TO_RUN: app.py
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Install and configure JFrog CLI
+      # - name: Set up JFrog CLI
+      #   uses: jfrog/setup-jfrog-cli@v4
+      #   with:
+      #     # JFrog platform URL
+      #     JF_URL: ${{ secrets.JFROG_URL }}
+      #     # JFrog platform credentials
+      #     JF_USER: ${{ secrets.JFROG_USERNAME }}
+      #     JF_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+
+      # Install Python and dependencies from JFrog Artifactory
+      - name: Install Python and dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt 
+         # pip install -r requirements.txt -i https://$JF_USER:$JF_PASSWORD@$JF_URL/artifactory/api/pypi/
+
+      # Run Snyk to check for vulnerabilities
+      - name: Run Snyk to check vulnerabilities
+        uses: snyk/actions/setup@v2
+        with:
+          command: test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # Run SonarQube analysis
+      - name: Run SonarQube analysis
+        uses: sonarsource/sonarqube-scan-action@master
+        # env:
+        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        #   SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY
+            -Dsonar.sources=.
+            -Dsonar.host.url=${{ secrets.SONAR_URL }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          # -Dsonar.organization=your_organization
+
+
+        # uses: sonarsource/sonarqube-quality-gate-action@master
+        #     timeout-minutes: 5
+        #     env:
+        #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # Run unit tests
+      - name: Run unit tests
+        run: |
+          python3 -m unittest discover
+
+      ## NOTE: Don't pass the secrets as a variable-> it will expose in the final image 
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+  
+
+      # Build Docker image
+      - name: Build Docker image
+        # run: docker buildx -t ${{ secrets.JFROG_URL }}/${{ secrets.DOCKER_IMAGE }} .
+        run: docker buildx build --build-arg $BASE_IMAGE_VERSION  --build-arg $FILE_TO_RUN -t ${{secrets.DOCKER_ID}}/$IMAGENAME:$VERSION .                                                                             ─╯
+
+      # Docker login
+      - name: Docker login
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_ID }} --password-stdin
+
+
+      # Push Docker image to JFrog Artifactory
+      - name: Push Docker image to JFrog or Docker Hub
+        run: |
+          docker push ${{secrets.DOCKER_ID}}/$IMAGENAME:$VERSION
+        # jfrog rt docker-push ${{ secrets.JFROG_URL }}/${{ secrets.DOCKER_IMAGE }}
