@@ -94,23 +94,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_ID }}/py-app:latest
+          tags: ${{ secrets.DOCKER_ID }}/$IMAGE_NAME:$IMAGE_VERSION
           build-args: |
-            BASE_IMAGE_VERSION=3.7
-            FILE_TO_RUN=app.py
+            BASE_IMAGE_VERSION=$BASE_IMAGE_VERSION
+            FILE_TO_RUN=$FILE_TO_RUN
 
-
-      # # Build Docker image
-      # - name: Build Docker image
-      #   # run: docker buildx -t ${{ secrets.JFROG_URL }}/${{ secrets.DOCKER_IMAGE }} .
-      #   env:  
-      #     BASE_IMAGE_VERSION: $BASE_IMAGE_VERSION
-      #     FILE_TO_RUN: $FILE_TO_RUN
-      #     IMAGENAME: $IMAGE_NAME
-      #     VERSION: $IMAGE_VERSION
-      #   run: |
-      #     docker buildx build --build-arg BASE_IMAGE_VERSION=3.7 --build-arg FILE_TO_RUN=app.py -t hong0331/py-example:latest .
-      # # docker buildx build --build-arg $BASE_IMAGE_VERSION  --build-arg $FILE_TO_RUN -t ${{secrets.DOCKER_ID}}/$IMAGENAME:$VERSION .                                                                             ─╯
 
 
 
