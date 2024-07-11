@@ -90,7 +90,9 @@ jobs:
           FILE_TO_RUN: $FILE_TO_RUN
           IMAGENAME: $IMAGE_NAME
           VERSION: $IMAGE_VERSION
-        run: docker buildx build --build-arg $BASE_IMAGE_VERSION  --build-arg $FILE_TO_RUN -t ${{secrets.DOCKER_ID}}/$IMAGENAME:$VERSION .                                                                             ─╯
+        run: |
+          docker buildx build --build-arg BASE_IMAGE_VERSION="$BASE_IMAGE_VERSION" --build-arg FILE_TO_RUN="$FILE_TO_RUN"
+        # docker buildx build --build-arg $BASE_IMAGE_VERSION  --build-arg $FILE_TO_RUN -t ${{secrets.DOCKER_ID}}/$IMAGENAME:$VERSION .                                                                             ─╯
 
       # Docker login
       - name: Docker login
