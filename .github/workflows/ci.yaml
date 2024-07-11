@@ -15,10 +15,9 @@ jobs:
       IMAGE_NAME: intern-py
       IMAGE_VERSION: 0.1
       SONAR_PROJECT_KEY: python-app
-      ## DOCKERFILE ARGUMENTS
       
-      # PYTHON BASE IMAGE VERSION 
-      # 3.7; should fail during snyk scan due to high vulnerabilities
+
+
       BASE_IMAGE_VERSION: 3.8
 
       FILE_TO_RUN: app.py
