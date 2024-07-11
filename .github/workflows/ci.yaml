@@ -59,7 +59,7 @@ jobs:
         #   SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY
+            -Dsonar.projectKey=python-app
             -Dsonar.sources=.
             -Dsonar.host.url=${{ secrets.SONAR_URL }}
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
