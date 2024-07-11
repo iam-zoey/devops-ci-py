@@ -91,7 +91,7 @@ jobs:
           IMAGENAME: $IMAGE_NAME
           VERSION: $IMAGE_VERSION
         run: |
-          docker buildx build --build-arg BASE_IMAGE_VERSION=3.7 --build-arg FILE_TO_RUN=app.py -t hong0331/py-example:latest .
+          docker buildx build --build-arg BASE_IMAGE_VERSION=3.7 --build-arg FILE_TO_RUN=app.py -t ${{secrets.DOCKER_ID}}/py-example:latest .
       # docker buildx build --build-arg $BASE_IMAGE_VERSION  --build-arg $FILE_TO_RUN -t ${{secrets.DOCKER_ID}}/$IMAGENAME:$VERSION .                                                                             ─╯
 
       # Docker login
@@ -102,5 +102,5 @@ jobs:
       # Push Docker image to JFrog Artifactory
       - name: Push Docker image to JFrog or Docker Hub
         run: |
-          docker push ${{secrets.DOCKER_ID}}/test:0.1
+          docker push ${{secrets.DOCKER_ID}/py-example:latest 
         # jfrog rt docker-push ${{ secrets.JFROG_URL }}/${{ secrets.DOCKER_IMAGE }}
