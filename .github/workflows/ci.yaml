@@ -17,6 +17,7 @@ jobs:
       SONAR_PROJECT_KEY: python-app
       ## DOCKERFILE ARGUMENTS
       BASE_IMAGE_VERSION: 3.7
+      PYTHON_VERSION: 3.7
       FILE_TO_RUN: app.py
 
 
@@ -42,13 +43,12 @@ jobs:
          # pip install -r requirements.txt -i https://$JF_USER:$JF_PASSWORD@$JF_URL/artifactory/api/pypi/
 
       # Run Snyk to check for vulnerabilities
-      - name: Run Snyk to check vulnerabilities
-        uses: snyk/actions/setup@v2
-        with:
-          command: test
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python-$PYTHON_VERSION@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
+        with:
+          args: --severity-threshold=high
       # Run SonarQube analysis
       - name: Run SonarQube analysis
         uses: sonarsource/sonarqube-scan-action@master
