@@ -102,5 +102,5 @@ jobs:
       # Push Docker image to JFrog Artifactory
       - name: Push Docker image to JFrog or Docker Hub
         run: |
-          docker push ${{secrets.DOCKER_ID}/py-example:latest 
+          docker push ${{secrets.DOCKER_ID}}/py-example:latest 
         # jfrog rt docker-push ${{ secrets.JFROG_URL }}/${{ secrets.DOCKER_IMAGE }}
