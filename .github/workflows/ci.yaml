@@ -96,8 +96,8 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_ID }}/$IMAGE_NAME:$IMAGE_VERSION
           build-args: |
-            BASE_IMAGE_VERSION=$BASE_IMAGE_VERSION
-            FILE_TO_RUN=$FILE_TO_RUN
+            BASE_IMAGE_VERSION=${{env.BASE_IMAGE_VERSION}}
+            FILE_TO_RUN=${{env.FILE_TO_RUN}}
 
 
 
