@@ -12,14 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: py-example
-      IMAGE_VERSION: 0.1
+      IMAGE_NAME: py-example # dockerhub image name 
+      IMAGE_VERSION: 0.1 # dockerhub image tag
       SONAR_PROJECT_KEY: python-app
-      
-
-
-      BASE_IMAGE_VERSION: 3.7
-
+      BASE_IMAGE_VERSION: 2.7
       FILE_TO_RUN: app.py
 
 
