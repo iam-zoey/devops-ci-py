@@ -1,11 +1,14 @@
 from flask import Flask, jsonify
 
-# Initialize Flask app
 app = Flask(__name__)
 
 @app.route('/')
-def hello_world():
-    return jsonify(message="Hello, World!")
+def home():
+    return jsonify({"message": "Hello, World!"})
+
+@app.route('/add/<int:a>/<int:b>')
+def add(a, b):
+    return jsonify({"result": a + b})
 
 if __name__ == '__main__':
     app.run(debug=True)

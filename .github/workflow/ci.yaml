@@ -74,7 +74,7 @@ jobs:
       # Run unit tests
       - name: Run unit tests
         run: |
-          python3 -m unittest discover
+          python3 -m unittest discover -s tests
 
       ## NOTE: Don't pass the secrets as a variable-> it will expose in the final image 
       # Set up Docker Buildx
