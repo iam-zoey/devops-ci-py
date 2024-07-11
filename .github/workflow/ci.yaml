@@ -42,7 +42,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt 
-         # pip install -r requirements.txt -i https://$JF_USER:$JF_PASSWORD@$JF_URL/artifactory/api/pypi/
+        # pip install -r requirements.txt -i https://$JF_USER:$JF_PASSWORD@$JF_URL/artifactory/api/pypi/
 
       # Run Snyk to check for vulnerabilities
       - name: Run Snyk to check for vulnerabilities
@@ -90,7 +90,7 @@ jobs:
 
       # Build and Push to DockerHub
       - name: Build and Push to DockerHub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
