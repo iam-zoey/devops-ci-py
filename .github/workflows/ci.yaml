@@ -29,8 +29,8 @@ jobs:
       # Install Python and dependencies from JFrog Artifactory
       - name: Install Python and dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt 
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt 
 
       # Run Snyk to check for vulnerabilities
       - name: Run Snyk to check for vulnerabilities
