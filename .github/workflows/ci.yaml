@@ -16,29 +16,21 @@ jobs:
       IMAGE_VERSION: 0.1 # dockerhub image tag
       SONAR_PROJECT_KEY: python-app
       BASE_IMAGE_VERSION: 2.7
-      FILE_TO_RUN: app.py
+      COMMAND: python3 src/app.py
+      SONAR_PROJECT_NAME: python-app
+      # TARGET_ARTIFACT: <your artifactory>.jfrog.io
 
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Install and configure JFrog CLI
-      # - name: Set up JFrog CLI
-      #   uses: jfrog/setup-jfrog-cli@v4
-      #   with:
-      #     # JFrog platform URL
-      #     JF_URL: ${{ secrets.JFROG_URL }}
-      #     # JFrog platform credentials
-      #     JF_USER: ${{ secrets.JFROG_USERNAME }}
-      #     JF_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
 
       # Install Python and dependencies from JFrog Artifactory
       - name: Install Python and dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt 
-        # pip install -r requirements.txt -i https://$JF_USER:$JF_PASSWORD@$JF_URL/artifactory/api/pypi/
 
       # Run Snyk to check for vulnerabilities
       - name: Run Snyk to check for vulnerabilities
@@ -47,21 +39,17 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
-      # Run SonarQube analysis
-      - name: Run SonarQube analysis
-        uses: sonarsource/sonarqube-scan-action@master
-        # env:
-        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        #   SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=python-app
-            -Dsonar.sources=.
-            -Dsonar.host.url=${{ secrets.SONAR_URL }}
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          # -Dsonar.organization=your_organization
 
-
+      # ========================================
+      # # Run SonarQube analysis
+      # - name: Run SonarQube analysis
+      #   uses: sonarsource/sonarqube-scan-action@master
+      #   with:
+      #     args: >
+      #       -Dsonar.projectKey=${{env.SONAR_PROJECT_NAME}}
+      #       -Dsonar.sources=.
+      #       -Dsonar.host.url=${{ secrets.SONAR_URL }}
+      #       -Dsonar.login=${{ secrets.SONAR_TOKEN }}
         # uses: sonarsource/sonarqube-quality-gate-action@master
         #     timeout-minutes: 5
         #     env:
@@ -72,7 +60,6 @@ jobs:
         run: |
           python3 -m unittest discover -s tests
 
-      ## NOTE: Don't pass the secrets as a variable-> it will expose in the final image 
       # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -94,13 +81,8 @@ jobs:
           build-args: |
             BASE_IMAGE_VERSION=${{env.BASE_IMAGE_VERSION}}
             FILE_TO_RUN=${{env.FILE_TO_RUN}}
-
-      # # Push Docker image to JFrog Artifactory
-      # - name: Push Docker image to JFrog or Docker Hub
-      #   run: |
-      #     docker image ls 
-      #     docker push hong0331/py-example:latest 
-      #   # jfrog rt docker-push ${{ secrets.JFROG_URL }}/${{ secrets.DOCKER_IMAGE }}
+            
+      
 
 
       

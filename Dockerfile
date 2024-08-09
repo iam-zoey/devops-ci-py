@@ -1,10 +1,18 @@
 # syntax=docker/dockerfile:1
-ARG BASE_IMAGE_VERSION=3.9-slim
 
-FROM python:${BASE_IMAGE_VERSION}
-ARG FILE_TO_RUN="main.py"
-ENV FILE=${FILE_TO_RUN}
+# Default value for base image 
+ARG BASE_IMAGE=python:3.9-slim
+FROM ${BASE_IMAGE}
+
+# Default value for entry commands
+ARG COMMAND="python3 src/main.py"
+# ARG JFROG_SOURCE_URL="jfrog.example.com"
+
 WORKDIR /app
-COPY . .
-RUN pip install -r requirements.txt
-CMD ["sh", "-c", "python $FILE"]
+COPY src /app/src
+COPY tests /app/tests
+COPY requirements.txt .
+# RUN pip install -r requirements.txt -i ${JFROG_SOURCE_URL}
+
+WORKDIR /app
+CMD ["sh","-c", "$COMMAND"]
