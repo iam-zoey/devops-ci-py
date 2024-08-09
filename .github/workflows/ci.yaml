@@ -16,7 +16,7 @@ jobs:
       IMAGE_VERSION: 0.1 # dockerhub image tag
       SONAR_PROJECT_KEY: python-app
       BASE_IMAGE_VERSION: 2.7
-      COMMAND: python3 app.py
+      COMMAND: python3 src/app.py
       SONAR_PROJECT_NAME: python-app
       # TARGET_ARTIFACT: <your artifactory>.jfrog.io
 
