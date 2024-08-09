@@ -12,7 +12,7 @@ WORKDIR /app
 COPY src /app/src
 COPY tests /app/tests
 COPY requirements.txt .
-# RUN pip install -r requirements.txt -i ${JFROG_SOURCE_URL}
+RUN pip install -r requirements.txt 
 
 WORKDIR /app
 CMD ["sh","-c", "$COMMAND"]
